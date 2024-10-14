@@ -22,25 +22,52 @@
                         <a class="nav-link active" aria-current="page" href="/home.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" type="button">Branches</a>
+                        <a class="nav-link" type="button" onclick="loadModule('branches')">Branches</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" type="button">Pricing</a>
+                        <a class="nav-link" type="button">Status</a>
                     </li>                    
                 </ul>
             </div>
         </div>
     </nav>
 
+    <div class="modal" id="modal_base" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4" id="content_area"></div>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script src=/js/jquery.sessions.js></script>
+    <script src="/js/modal.js"></script>
     <script>
 
         $(document).ready(function() {
             urlClear();
         });
+
+        function loadModule(module_to_load) {            
+            requestModule(module_to_load)
+                .then((content) => {
+                    $('#content_area').html(content);
+                });
+        }
+
+        async function requestModule(requestModule) {
+            let content = await $.ajax({
+                url: `/modules/${requestModule}/index.php`,
+                type: 'GET'
+            });            
+
+            return content;
+        }
 
         function urlClear() {
             if (window.location.href.indexOf('#') > -1) {

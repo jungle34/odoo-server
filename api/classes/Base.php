@@ -11,7 +11,9 @@ Class Base{
     public $db;
     public $headers;
     public $user_ID;
-    public $caminho = '/var/www/html/odoo-server/';    
+    public $caminho = '/var/www/html/odoo-server/';
+
+    public $auth;
 
 	/**
      * Makes the connect with database to check access token
@@ -22,7 +24,36 @@ Class Base{
         
         $db2 = new Database();
         $this->db2 = $db2->connect();
-    }   
+    }
+
+    /**
+     * Check if the access token is valid
+     */
+    function checkToken(){
+        $db = new Database();
+        $this->base_db = $db->connect();
+
+        $this->headers = $this->getHeaders();
+
+        if (!isset($this->headers['Authorization'])) $this->returnError("Token não informado");        
+
+        $this->auth = $this->isValidToken($this->headers['Authorization']);
+
+        if(!$this->auth) $this->returnError("Token inválido");
+    }
+
+    private function isValidToken($token) {
+        $query = "CALL check_token(:token)";        
+
+        try{
+            $query = $this->base_db->prepare($query);
+            $query->execute(array(':token' => $token));
+        } catch(PDOException $e){
+            $this->returnError($e);
+        }
+
+        return $query->fetchObject();
+    }
 
     function format($type, $value){
         switch($type){
