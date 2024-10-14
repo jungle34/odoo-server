@@ -10,7 +10,7 @@ class Branches extends Base {
 
     private function buildJobExec() {
         return array(
-            "job" => "create_new_branch",
+            "job" => "Branch/create_new_branch",
             "user" => $this->auth,
             "content" => $_POST
         );
