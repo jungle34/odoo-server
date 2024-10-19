@@ -2,6 +2,8 @@
 
 A PHP system for managing an Odoo server. PHP is used exclusively for the API responsible for managing the MySQL database that controls the Odoo server.
 
+Something similar to odoo.sh with the aim of studying systems architecture
+
 ### Main objectives
 + Manage branches
 + Manage status
